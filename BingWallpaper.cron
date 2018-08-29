@@ -1,1 +1,1 @@
-* */1 * * * sh ~/Pictures/BingWallpaper/bin/BingWallpaper.sh
+0 8 * * * sh /Users/b51/Pictures/BingWallpaper/BingWallpaper.sh
