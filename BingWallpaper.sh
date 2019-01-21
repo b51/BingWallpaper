@@ -1,16 +1,17 @@
 #!/bin/sh
 localDir="/Users/$USER/Pictures/BingWallpaper"
 filenameRegex=".*"$(date "+%Y-%m-%d")".*jpg"
-log="$localDir/bin/log.log"
+#filenameRegex=$(date)".*txt"
+log="$localDir/log.log"
 
 findResult=$(find $localDir -regex $filenameRegex)
 if [ ! -n "$findResult" ]; then
     baseUrl="cn.bing.com"
-    imgurl=$(expr "$(curl -L $baseUrl | grep hprichbg)" : ".*hprichbg\(.*\)', hash")
+    imgurl=$(expr "$(curl -L $baseUrl | grep hprichbg)" : '.*url: "/az/hprichbg\(.*\)"};g_img')
+    #imgurl="\/rb\/OceanDrive_ZH-CN8199064696_1920x1080.jpg"
     filename=$(expr "$imgurl" : '.*/\(.*\)')
     localpath="$localDir/$(date "+%Y-%m-%d")-$filename"
     curl -o $localpath $baseUrl/az/hprichbg/$imgurl
-#    curl -o $localpath $baseUrl/az/hprichbg/rb/TulipsEquinox_ZH-CN11213785857_1920x1080.jpg
     echo "$baseUrl/az/hprichbg/$imgurl"
     osascript -e "                              \
         tell application \"System Events\" to   \
