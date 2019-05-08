@@ -21,7 +21,9 @@ if [ ! -n "$findResult" ]; then
             tell desktop 1 to                   \
                 set picture to \"$localpath\""
     osascript -e "display notification \"$filename Downloaded\" with title \"BingWallpaper\""
+    copyright=$(expr "$(curl -L $bingDailyUrl)" : ".*<copyright>\(.*\)</copyright>")
     echo "$(date +"%Y-%m-%d %H:%M:%S") Downloaded $filename" >> $log
+    echo "$copyright" >> $log
 else
     echo "$(date +"%Y-%m-%d %H:%M:%S") Exist" >> $log
     exit 0
