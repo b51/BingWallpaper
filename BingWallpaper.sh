@@ -1,10 +1,10 @@
 #!/bin/sh
 localDir="/Users/$USER/Pictures/BingWallpaper"
 filenameRegex=".*"$(date "+%Y-%m-%d")".*jpg"
-#filenameRegex=$(date)".*txt"
 log="$localDir/log.log"
 # today: 0, yesterday: 1, tomorrow: -1
-date=0
+n=0
+#filenameRegex=".*"$(date -d "$n days ago" "+%Y-%m-%d")".*jpg"
 bingDailyUrl="http://www.bing.com/HPImageArchive.aspx?format=xml&idx=$date&n=1&mkt=zh-CN"
 
 findResult=$(find $localDir -regex $filenameRegex)
