@@ -1,5 +1,5 @@
 #!/bin/sh
-localDir="/Users/$USER/Pictures/BingWallpaper"
+localDir="/home/$USER/Pictures/BingWallpaper"
 filenameRegex=".*"$(date "+%Y-%m-%d")".*jpg"
 log="$localDir/log.log"
 # today: 0, yesterday: 1, tomorrow: -1
@@ -16,11 +16,7 @@ if [ ! -n "$findResult" ]; then
     localpath="$localDir/$(date "+%Y-%m-%d")-$filename"
     curl -o $localpath $baseUrl$imgurl
     echo "$baseUrl$imgurl"
-    osascript -e "                              \
-        tell application \"System Events\" to   \
-            tell desktop 1 to                   \
-                set picture to \"$localpath\""
-    osascript -e "display notification \"$filename Downloaded\" with title \"BingWallpaper\""
+    `gsettings set org.gnome.desktop.background picture-uri "file://$localpath"`
     copyright=$(expr "$(curl -L $bingDailyUrl)" : ".*<copyright>\(.*\)</copyright>")
     echo "$(date +"%Y-%m-%d %H:%M:%S") Downloaded $filename" >> $log
     echo "$copyright" >> $log
