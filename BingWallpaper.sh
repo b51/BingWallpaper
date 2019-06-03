@@ -1,11 +1,10 @@
 #!/bin/sh
 localDir="/$HOME/Pictures/BingWallpaper"
-filenameRegex=".*"$(date "+%Y-%m-%d")".*jpg"
 log="$localDir/log.log"
 # today: 0, yesterday: 1, tomorrow: -1
 n=0
-#filenameRegex=".*"$(date -d "$n days ago" "+%Y-%m-%d")".*jpg"
-bingDailyUrl="http://www.bing.com/HPImageArchive.aspx?format=xml&idx=$date&n=1&mkt=zh-CN"
+filenameRegex=".*"$(date -d "$n days ago" "+%Y-%m-%d")".*jpg"
+bingDailyUrl="http://www.bing.com/HPImageArchive.aspx?format=xml&idx=$n&n=1&mkt=zh-CN"
 
 findResult=$(find $localDir -regex $filenameRegex)
 if [ ! -n "$findResult" ]; then
@@ -13,7 +12,7 @@ if [ ! -n "$findResult" ]; then
     #imgurl=$(expr "$(curl -L $bingDailyUrl | grep hprichbg)" : '.*url: "/az/hprichbg\(.*\)"};g_img')
     imgurl=$(expr "$(curl -L $bingDailyUrl)" : ".*<url>\(.*\)</url>")
     filename=$(expr "$imgurl" : ".*id=OHR.\(.*\)&amp;rf")
-    localpath="$localDir/$(date "+%Y-%m-%d")-$filename"
+    localpath="$localDir/$(date -d "$n days ago" "+%Y-%m-%d")-$filename"
     curl -o $localpath $baseUrl$imgurl
     echo "$baseUrl$imgurl"
     gsettings set org.gnome.desktop.background picture-uri "file://$localpath"
