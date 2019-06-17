@@ -1,11 +1,11 @@
 #!/bin/sh
 localDir="/Users/$USER/Pictures/BingWallpaper"
-filenameRegex=".*"$(date "+%Y-%m-%d")".*jpg"
+#filenameRegex=".*"$(date "+%Y-%m-%d")".*jpg"
 log="$localDir/log.log"
 # today: 0, yesterday: 1, tomorrow: -1
-n=0
-#filenameRegex=".*"$(date -d "$n days ago" "+%Y-%m-%d")".*jpg"
-bingDailyUrl="http://www.bing.com/HPImageArchive.aspx?format=xml&idx=$date&n=1&mkt=zh-CN"
+daysBefore=0
+filenameRegex=".*"$(date -v"-${daysBefore}d" "+%Y-%m-%d")".*jpg"
+bingDailyUrl="http://www.bing.com/HPImageArchive.aspx?format=xml&idx=$daysBefore&n=1&mkt=zh-CN"
 
 findResult=$(find $localDir -regex $filenameRegex)
 if [ ! -n "$findResult" ]; then
@@ -13,9 +13,9 @@ if [ ! -n "$findResult" ]; then
     #imgurl=$(expr "$(curl -L $bingDailyUrl | grep hprichbg)" : '.*url: "/az/hprichbg\(.*\)"};g_img')
     imgurl=$(expr "$(curl -L $bingDailyUrl)" : ".*<url>\(.*\)</url>")
     filename=$(expr "$imgurl" : ".*id=OHR.\(.*\)&amp;rf")
-    localpath="$localDir/$(date "+%Y-%m-%d")-$filename"
+    localpath="$localDir/$(date -v"-${daysBefore}d" "+%Y-%m-%d")-$filename"
+    echo $localpath
     curl -o $localpath $baseUrl$imgurl
-    echo "$baseUrl$imgurl"
     osascript -e "                              \
         tell application \"System Events\" to   \
             tell desktop 1 to                   \
