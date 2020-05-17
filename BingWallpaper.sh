@@ -10,11 +10,11 @@ bingDailyUrl="http://www.bing.com/HPImageArchive.aspx?format=xml&idx=$daysBefore
 findResult=$(find $localDir -regex $filenameRegex)
 if [ ! -n "$findResult" ]; then
     baseUrl="cn.bing.com"
-    #imgurl=$(expr "$(curl -L $bingDailyUrl | grep hprichbg)" : '.*url: "/az/hprichbg\(.*\)"};g_img')
     imgurl=$(expr "$(curl -L $bingDailyUrl)" : ".*<url>\(.*\)</url>")
+    imgurl=${imgurl/1920x1080/UHD}
     filename=$(expr "$imgurl" : ".*id=OHR.\(.*\)&amp;rf")
+    echo $filename
     localpath="$localDir/$(date -v"-${daysBefore}d" "+%Y-%m-%d")-$filename"
-    echo $localpath
     curl -o $localpath $baseUrl$imgurl
     osascript -e "                              \
         tell application \"System Events\" to   \
