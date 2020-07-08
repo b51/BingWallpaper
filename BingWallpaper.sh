@@ -12,10 +12,9 @@ if [ ! -n "$findResult" ]; then
     imgurl=$(expr "$(curl -L $bingDailyUrl)" : ".*<url>\(.*\)</url>")
     imgurl=${imgurl/1920x1080/UHD}
     filename=$(expr "$imgurl" : ".*id=OHR.\(.*\)&amp;rf")
-    echo $filename
-    localpath="$localDir/$(date -d "$n days ago" "+%Y-%m-%d")-$filename"
+    localpath="$localDir/$(date -d "$daysBefore days ago" "+%Y-%m-%d")-$filename"
+    echo $localpath
     curl -o $localpath $baseUrl$imgurl
-    echo "$baseUrl$imgurl"
     gsettings set org.gnome.desktop.background picture-uri "file://$localpath"
     copyright=$(expr "$(curl -L $bingDailyUrl)" : ".*<copyright>\(.*\)</copyright>")
     echo "$(date +"%Y-%m-%d %H:%M:%S") Downloaded $filename" >> $log
