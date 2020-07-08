@@ -1,17 +1,18 @@
-#!/bin/sh
-localDir="/$HOME/Pictures/BingWallpaper"
+#!/bin/bash
+localDir="$HOME/Pictures/BingWallpaper"
 log="$localDir/log.log"
 # today: 0, yesterday: 1, tomorrow: -1
-n=0
-filenameRegex=".*"$(date -d "$n days ago" "+%Y-%m-%d")".*jpg"
-bingDailyUrl="http://www.bing.com/HPImageArchive.aspx?format=xml&idx=$n&n=1&mkt=zh-CN"
+daysBefore=0
+filenameRegex=".*"$(date -d"-${daysBefore} days ago" "+%Y-%m-%d")".*jpg"
+bingDailyUrl="http://www.bing.com/HPImageArchive.aspx?format=xml&idx=$daysBefore&n=1&mkt=zh-CN"
 
 findResult=$(find $localDir -regex $filenameRegex)
 if [ ! -n "$findResult" ]; then
     baseUrl="cn.bing.com"
-    #imgurl=$(expr "$(curl -L $bingDailyUrl | grep hprichbg)" : '.*url: "/az/hprichbg\(.*\)"};g_img')
     imgurl=$(expr "$(curl -L $bingDailyUrl)" : ".*<url>\(.*\)</url>")
+    imgurl=${imgurl/1920x1080/UHD}
     filename=$(expr "$imgurl" : ".*id=OHR.\(.*\)&amp;rf")
+    echo $filename
     localpath="$localDir/$(date -d "$n days ago" "+%Y-%m-%d")-$filename"
     curl -o $localpath $baseUrl$imgurl
     echo "$baseUrl$imgurl"
